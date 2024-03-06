@@ -34,17 +34,17 @@ TextFormField reusableInputFieldWidget(
     autocorrect: true,
     cursorColor: Colors.deepOrange,
     decoration: InputDecoration(
-      prefixIcon: Icon(
-        iconData,
-        color: Colors.deepOrange,
-      ),
-      labelText: labelText,
-      filled: true,
-      floatingLabelBehavior: FloatingLabelBehavior.never,
-      border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20.0),
-          borderSide: const BorderSide(width: 0, style: BorderStyle.none)),
-    ),
+        prefixIcon: Icon(
+          iconData,
+          color: Colors.deepOrange,
+        ),
+        labelText: labelText,
+        filled: true,
+        floatingLabelBehavior: FloatingLabelBehavior.never,
+        border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+            borderSide: const BorderSide(width: 0, color: Colors.deepOrange, style: BorderStyle.none)),
+        fillColor: Colors.white70),
     keyboardType: TextInputType.text,
   );
 }
@@ -96,7 +96,7 @@ Container reusableButtonWidget(BuildContext context, String buttonText,
             if (states.contains(MaterialState.pressed)) {
               return Colors.black;
             }
-            return Colors.black;
+            return Colors.deepOrange;
           }),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
@@ -106,8 +106,8 @@ Container reusableButtonWidget(BuildContext context, String buttonText,
   );
 }
 
-Container reusableButtonWidgetWithChildWidget(BuildContext context, Function onClick,
-    double L, double T, double R, double B, Widget child) {
+Container reusableButtonWidgetWithChildWidget(BuildContext context,
+    Function onClick, double L, double T, double R, double B, Widget child) {
   return Container(
     alignment: Alignment.centerRight,
     width: 200,
@@ -124,7 +124,7 @@ Container reusableButtonWidgetWithChildWidget(BuildContext context, Function onC
             if (states.contains(MaterialState.pressed)) {
               return Colors.black;
             }
-            return Colors.black;
+            return Colors.deepOrange;
           }),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
@@ -167,6 +167,7 @@ Widget reusableFormWidget(BuildContext context, String title, String body,
     ),
   );
 }
+
 //Reply
 Widget reusableReplyWidget(BuildContext context, String title, String body,
     String formOwner, Color bakcgroundColor, Function? onTapFunc) {
@@ -202,8 +203,8 @@ Widget reusableReplyWidget(BuildContext context, String title, String body,
 }
 
 //Notification
-Widget reusableNotificationWidget(BuildContext context, String title, String body,
-    String formOwner, Color bakcgroundColor, Function? onTapFunc) {
+Widget reusableNotificationWidget(BuildContext context, String title,
+    String body, String formOwner, Color bakcgroundColor, Function? onTapFunc) {
   return Card(
     color: bakcgroundColor,
     elevation: 3,

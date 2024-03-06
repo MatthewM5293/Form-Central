@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:formcentral/pages/createFormPage.dart';
-import 'package:formcentral/pages/notificationsPage.dart';
-import 'package:formcentral/pages/searchPage.dart';
+import 'package:formcentral/customWidgets/global.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,17 +10,43 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  bool _isDarkMode = true;
+
+  @override
+  void initState() {
+    super.initState();
+    DarkMode.getDarkMode().then((value) {
+      setState(() {
+        _isDarkMode = value;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    printMode(_isDarkMode);
+    final ThemeData themeData = ThemeData(
+        useMaterial3: true,
+        brightness: _isDarkMode ? Brightness.dark : Brightness.light);
     return MaterialApp(
-      //app name
       title: "Form Central",
-      theme: ThemeData(
-        primarySwatch: Colors.deepOrange,
-      ),
+      theme: themeData,
       home: Scaffold(
-        backgroundColor: Colors.black,
         appBar: AppBar(
+          actions: [
+            IconButton(
+              isSelected: _isDarkMode,
+              onPressed: () {
+                setState(() {
+                  DarkMode.setDarkMode(_isDarkMode);
+                  _isDarkMode = !_isDarkMode; //change mode
+                });
+              },
+              icon: const Icon(Icons.wb_sunny_outlined),
+              selectedIcon: const Icon(Icons.brightness_2_outlined),
+            ),
+          ],
           title: const Row(
             children: [
               Image(
@@ -34,6 +59,7 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           centerTitle: true,
+          backgroundColor: Colors.deepOrange,
         ),
         body: const Card(
           color: Colors.deepOrange,
@@ -62,50 +88,11 @@ class _HomePageState extends State<HomePage> {
             )
           ]),
         ),
-        bottomNavigationBar: BottomNavigationBar(
-            currentIndex: 0,
-            onTap: (value) => {
-                  if (value == 1)
-                    {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SearchPage()))
-                    }
-                  else if (value == 2)
-                    {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const CreateFormPage()))
-                    }
-                  else if (value == 3)
-                    {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => NotificationsPage()))
-                    }
-                },
-            items: const [
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.home_filled),
-                  label: "Home",
-                  backgroundColor: Colors.deepOrange),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.search),
-                  label: "Search",
-                  backgroundColor: Colors.deepOrange),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.add),
-                  label: "Create",
-                  backgroundColor: Colors.deepOrange),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.notifications), label: "Notifications"),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.account_circle), label: "Profile"),
-            ]),
       ),
     );
   }
+}
+
+printMode(bool isDarkMode) {
+  print(isDarkMode);
 }
