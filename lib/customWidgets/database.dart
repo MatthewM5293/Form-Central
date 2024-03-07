@@ -7,67 +7,63 @@ import 'package:path_provider/path_provider.dart';
 import 'package:formcentral/model/user.dart';
 
 class Database {
-  late Directory dir;
-  late Isar isar;
+  late Future<Isar> db;
 
-  Future<void> InitDB() async {
-    if (dir == null && isar == null) {
-      getApplicationDocumentsDirectory()
-          .then((value) => dir = value)
-          .whenComplete(() => Isar.open(
-              [UserSchema, FormModelSchema, ReplySchema],
-              directory: dir!.path));
+  Database() {
+    db = openDB();
+  }
+
+  Future<Isar> openDB() async {
+    if (Isar.instanceNames.isEmpty) {
+      final dir = await getApplicationDocumentsDirectory();
+      return await Isar.open([UserSchema, FormModelSchema, ReplySchema],
+          inspector: true, directory: dir.path);
     }
+    return Future.value(Isar.getInstance());
   }
 
-  AddUserToDB(User user) async {
-    await InitDB();
-    await isar!.writeTxn(() async {
-      await isar!.users.put(user); // insert & update
-    });
+  Future<void> addUserToDB(User user) async {
+    final isar = await db;
+    isar.writeTxnSync(() => isar.users.putSync(user));
   }
 
-  AddFormToDB(FormModel form) async {
-    await InitDB();
-    await isar!.writeTxn(() async {
-      await isar!.formModels.put(form); // insert & update
-    });
+  Future<dynamic> addFormToDB(FormModel form) async {
+    final isar = await db;
+    isar.writeTxnSync(() => isar.formModels.putSync(form));
   }
 
-  AddReplyToDB(Reply reply) async {
-    await InitDB();
-    await isar!.writeTxn(() async {
-      await isar!.replys.put(reply); // insert & update
-    });
+  addReplyToDB(Reply reply) async {
+    final isar = await db;
+    isar.writeTxnSync(() => isar.replys.putSync(reply));
   }
 
-  GetUserFromDB(int id) async {
-    await InitDB();
-    final existingUser = await isar!.users.get(id); // get
+  Future<User?> getUserFromDB(int id) async {
+    final isar = await db;
+    return isar.users.get(id);
   }
 
-  GetFormFromDB(int id) async {
-    await InitDB();
-    return await isar!.formModels.get(id); // get
+  Future<FormModel?> getFormFromDB(int id) async {
+    final isar = await db;
+    return isar.formModels.get(id);
   }
 
-  GetReplyFromDB(int id) async {
-    await InitDB();
-    return await isar!.replys.get(id); // get
+  Future<Reply?> getReplyFromDB(int id) async {
+    final isar = await db;
+    return isar.replys.get(id);
   }
 
-  DeleteUserFromDB(int id) async {
-    await InitDB();
-    isar!.users.delete(id); // get
+  deleteUserFromDB(int id) async {
+    final isar = await db;
+    isar.users.delete(id);
   }
 
-  DeleteFormFromDB(int id) async {
-    await InitDB();
-    isar!.formModels.delete(id); // get
+  deleteFormFromDB(int id) async {
+    final isar = await db;
+    isar.formModels.delete(id);
   }
 
-  DeleteReplyFromDB(int id) async {
-    await InitDB();
-    isar!.replys.delete(id); // get
+  deleteReplyFromDB(int id) async {
+    final isar = await db;
+    isar.replys.delete(id);
   }
 }

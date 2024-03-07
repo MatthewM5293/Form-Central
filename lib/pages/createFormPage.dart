@@ -7,6 +7,7 @@ import 'package:formcentral/model/form.dart';
 import 'package:formcentral/model/user.dart';
 
 Database database = new Database();
+
 class CreateFormPage extends StatefulWidget {
   const CreateFormPage({super.key});
 
@@ -109,8 +110,7 @@ class _CreateFormPage extends State<CreateFormPage> {
                           formOwner: user,
                           formTitle: title,
                           formBody: description);
-                      Forms.forms.add(form);
-                      database.AddFormToDB(form);
+                      database.addFormToDB(form);
                       //clears text fields
                       //dispose();
                       titleController.text = '';
