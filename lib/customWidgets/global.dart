@@ -1,7 +1,7 @@
 import 'dart:convert'; //JSON
 
 import 'package:flutter/material.dart';
-import 'package:formcentral/models/formModel.dart';
+import 'package:formcentral/model/form.dart';
 import 'package:formcentral/pages/createFormPage.dart';
 import 'package:formcentral/pages/homePage.dart';
 import 'package:formcentral/pages/notificationsPage.dart';

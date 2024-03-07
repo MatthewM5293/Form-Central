@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_guid/flutter_guid.dart';
 import 'package:formcentral/customWidgets/customWidgets.dart';
+import 'package:formcentral/customWidgets/database.dart';
 import 'package:formcentral/customWidgets/global.dart';
-import 'package:formcentral/models/formModel.dart';
-import 'package:formcentral/models/userModel.dart';
+import 'package:formcentral/model/form.dart';
+import 'package:formcentral/model/user.dart';
 
+Database database = new Database();
 class CreateFormPage extends StatefulWidget {
   const CreateFormPage({super.key});
 
@@ -53,7 +55,7 @@ class _CreateFormPage extends State<CreateFormPage> {
               onPressed: () {
                 setState(() {
                   DarkMode.setDarkMode(_isDarkMode);
-                  // _isDarkMode = !_isDarkMode; //change mode
+                  _isDarkMode = !_isDarkMode; //change mode
                 });
               },
               icon: const Icon(Icons.wb_sunny_outlined),
@@ -95,7 +97,6 @@ class _CreateFormPage extends State<CreateFormPage> {
                     if (title.isNotEmpty && description.isNotEmpty) {
                       //add form model to global list
                       var user = User(
-                          userId: Guid.newGuid,
                           username: "JeffTheKilla",
                           email: "test@email.com",
                           firstName: "firstName",
@@ -109,7 +110,9 @@ class _CreateFormPage extends State<CreateFormPage> {
                           formTitle: title,
                           formBody: description);
                       Forms.forms.add(form);
+                      database.AddFormToDB(form);
                       //clears text fields
+                      //dispose();
                       titleController.text = '';
                       descriptionController.text = '';
                     }

@@ -3,6 +3,7 @@ import 'dart:convert'; //JSON
 import 'package:flutter/material.dart';
 import 'package:formcentral/customWidgets/customWidgets.dart';
 import 'package:formcentral/customWidgets/global.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 
 class NotificationsPage extends StatefulWidget {
@@ -15,6 +16,7 @@ class NotificationsPage extends StatefulWidget {
 class _NotificationsPage extends State<NotificationsPage> {
   bool _isDarkMode = true;
   String? _quote = "";
+  String? _locationStr = "";
 
   @override
   void initState() {
@@ -27,6 +29,11 @@ class _NotificationsPage extends State<NotificationsPage> {
     Kanye.getQuote().then((value) {
       setState(() {
         _quote = value;
+      });
+    });
+    _getLocation().then((value) {
+      setState(() {
+        _locationStr = value;
       });
     });
   }
@@ -74,21 +81,30 @@ class _NotificationsPage extends State<NotificationsPage> {
           backgroundColor: Colors.deepOrange,
           centerTitle: true,
         ),
-        body: Column(children: [
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Text(_quote!),
-          ),
-          reusableButtonWidget(context, "Get New Quote", () {
-            setState(() {
-              final stringFuture = getQuote().then((value) {
-                setState(() {
-                  _quote = value;
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Text(_quote!),
+            ),
+            Text(_locationStr!),
+            reusableButtonWidgetFuture(
+                context, "Get Location", _getLocation(), 0, 0, 0, 0)
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+            backgroundColor: Colors.deepOrange,
+            foregroundColor: Colors.white,
+            child: const Icon(Icons.format_quote_rounded),
+            onPressed: () {
+              setState(() {
+                final stringFuture = getQuote().then((value) {
+                  setState(() {
+                    _quote = value;
+                  });
                 });
               });
-            });
-          }, 10, 0, 0, 0)
-        ]),
+            }),
       ),
     );
   }
@@ -103,4 +119,33 @@ getQuote() async {
   print(data["quote"]);
 
   return data['quote'];
+}
+
+Future<String> _getLocation() async {
+  LocationPermission permission = await Geolocator.checkPermission();
+
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+
+    if (permission == LocationPermission.denied) {
+      return "";
+    }
+  }
+
+  return _getCurrentLocation();
+}
+
+Future<String> _getCurrentLocation() async {
+  try {
+    late String loc = "press button";
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+
+    print("Latitude: ${position.latitude}, Longitude: ${position.longitude}");
+    loc = "Latitude: ${position.latitude}, Longitude: ${position.longitude}";
+    return loc;
+  } catch (e) {
+    print("Error getting location: $e");
+    return "";
+  }
 }

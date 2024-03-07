@@ -11,7 +11,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  bool _isDarkMode = true;
+  late bool _isDarkMode = true;
 
   @override
   void initState() {

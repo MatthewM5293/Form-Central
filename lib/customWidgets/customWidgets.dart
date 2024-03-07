@@ -101,7 +101,34 @@ Container reusableButtonWidget(BuildContext context, String buttonText,
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30.0)))),
-      child: Text(buttonText),
+      child: Text(buttonText, style: const TextStyle(color: Colors.white),),
+    ),
+  );
+}
+Container reusableButtonWidgetFuture(BuildContext context, String buttonText,
+    Future<String> onClick, double L, double T, double R, double B) {
+  return Container(
+    alignment: Alignment.centerRight,
+    width: 200,
+    height: 50,
+    margin: EdgeInsets.fromLTRB(L, T, R, B),
+    // margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
+    decoration: BoxDecoration(borderRadius: BorderRadius.circular(90.0)),
+    child: ElevatedButton(
+      onPressed: () {
+        onClick;
+      },
+      style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.resolveWith((states) {
+            if (states.contains(MaterialState.pressed)) {
+              return Colors.black;
+            }
+            return Colors.deepOrange;
+          }),
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.0)))),
+      child: Text(buttonText, style: const TextStyle(color: Colors.white),),
     ),
   );
 }
